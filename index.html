@@ -18,6 +18,7 @@ body {
   background: url('bg.jpg') no-repeat center center/cover;
   font-family: 'Poppins', sans-serif;
   overflow: hidden;
+  position: relative;
 }
 
 .overlay {
@@ -41,11 +42,16 @@ body {
 .card {
   max-width: 720px;
   animation: fadeIn 1.8s ease;
+  padding: 25px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.05);
+  box-shadow: 0 0 35px rgba(255,182,193,0.5);
 }
 
 .title {
   font-size: 26px;
   margin-bottom: 10px;
+  font-weight: 500;
 }
 
 .name {
@@ -61,12 +67,17 @@ body {
   border: 4px solid #ffb6c1;
   box-shadow: 0 0 25px rgba(255,182,193,0.8);
   margin: 20px 0;
+  transition: transform 0.4s;
+}
+.photo img:hover {
+  transform: scale(1.1) rotate(5deg);
 }
 
 .text {
   font-size: 18px;
   line-height: 1.7;
   margin: 15px 0;
+  min-height: 25px;
 }
 
 .buttons {
@@ -74,7 +85,7 @@ body {
 }
 
 button {
-  background: #ff5e78;
+  background: linear-gradient(45deg, #ff5e78, #ff2f5e);
   border: none;
   padding: 12px 26px;
   margin: 8px;
@@ -82,22 +93,39 @@ button {
   font-size: 16px;
   color: white;
   cursor: pointer;
-  transition: 0.2s;
+  transition: 0.3s;
+  box-shadow: 0 0 15px rgba(255,94,120,0.6);
 }
-
 button:hover {
-  transform: scale(1.08);
-  background: #ff2f5e;
+  transform: scale(1.1) rotate(-2deg);
+  box-shadow: 0 0 25px rgba(255,94,120,0.9);
 }
 
 .hidden {
   display: none;
 }
 
-.heart {
+.heart, .confetti, .popup {
   position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+.heart {
   color: #ff5e78;
   animation: fall linear infinite;
+}
+
+.confetti {
+  font-size: 18px;
+  animation: confettiFall linear infinite;
+}
+
+.popup {
+  color: #ffb6c1;
+  font-size: 20px;
+  font-weight: 600;
+  animation: popupFloat 3s ease forwards;
 }
 
 @keyframes fadeIn {
@@ -106,8 +134,19 @@ button:hover {
 }
 
 @keyframes fall {
-  0% { transform: translateY(-10vh); opacity: 1; }
-  100% { transform: translateY(110vh); opacity: 0; }
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+@keyframes confettiFall {
+  0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+@keyframes popupFloat {
+  0% { transform: translateY(0); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(-50px); opacity: 0; }
 }
 </style>
 </head>
@@ -121,11 +160,10 @@ button:hover {
 
     <!-- STEP 1 -->
     <div id="step1">
-      <div class="title">Hey, I am… oh, you know me 😉</div>
-      <div class="name">Valentine’s Day is sneaking up real close… and honestly, it feels like it’s doing that just to give me an excuse to flirt with you a little more 😉❤️</div>
+      <div class="title" id="typed1">Hey, I am… oh, you know me 😉</div>
+      <div class="name" id="typed2">Valentine’s Day is sneaking up real close… and honestly, it feels like it’s doing that just to give me an excuse to flirt with you a little more 😉❤️</div>
 
-
-      <div class="text">Are you free on 14th of feb? </div>
+      <div class="text" id="typed3">Are you free on 14th of Feb?</div>
 
       <div class="buttons">
         <button onclick="valentineYes()">Yes</button>
@@ -135,14 +173,14 @@ button:hover {
 
     <!-- STEP 2 -->
     <div id="step2" class="hidden">
-      <div class="text">Please say yes 🥺❤️</div>
+      <div class="text" id="typed4">Please say yes 🥺❤️</div>
       <button onclick="valentineYes()">Okay… yes</button>
     </div>
 
     <!-- STEP 3 -->
     <div id="step3" class="hidden">
-      <div class="text">You are such a cutie pieee 🥹❤️</div>
-      <div class="text">Will you be my Valentine?</div>
+      <div class="text" id="typed5">You are such a cutie pieee 🥹❤️</div>
+      <div class="text" id="typed6">Will you be my Valentine?</div>
 
       <div class="buttons">
         <button onclick="finalYes()">Yes 💖</button>
@@ -152,8 +190,8 @@ button:hover {
 
     <!-- FINAL -->
     <div id="final" class="hidden">
-      <div class="name">Counting down to the 14th. See you soon… and yes, I’m smiling already❤️</div>
-      <div class="text">
+      <div class="name" id="typed7">Counting down to the 14th. See you soon… and yes, I’m smiling already❤️</div>
+      <div class="text" id="typed8">
         Thank you for being you 💕
       </div>
       <div class="text">❤️❤️❤️</div>
@@ -161,6 +199,12 @@ button:hover {
 
   </div>
 </div>
+
+<!-- Optional Background Music -->
+<audio id="bgMusic" loop>
+  <source src="bgmusic.mp3" type="audio/mpeg">
+</audio>
+<button onclick="toggleMusic()" style="position:fixed;bottom:20px;right:20px;padding:10px 15px;border-radius:15px;background:#ff5e78;color:white;border:none;cursor:pointer;z-index:10;">🎵 Play/Pause</button>
 
 <script>
 function valentineNo() {
@@ -185,7 +229,7 @@ function finalYes() {
 }
 
 /* Falling hearts */
-for (let i = 0; i < 28; i++) {
+for (let i = 0; i < 35; i++) {
   const heart = document.createElement("div");
   heart.className = "heart";
   heart.innerHTML = "❤️";
@@ -194,8 +238,56 @@ for (let i = 0; i < 28; i++) {
   heart.style.animationDuration = Math.random() * 3 + 4 + "s";
   document.body.appendChild(heart);
 }
+
+/* Falling confetti */
+const confettiSymbols = ["✨","💖","🌸","💫","💌"];
+for (let i = 0; i < 25; i++) {
+  const confetti = document.createElement("div");
+  confetti.className = "confetti";
+  confetti.innerHTML = confettiSymbols[Math.floor(Math.random()*confettiSymbols.length)];
+  confetti.style.left = Math.random() * 100 + "vw";
+  confetti.style.fontSize = Math.random() * 18 + 12 + "px";
+  confetti.style.animationDuration = Math.random() * 3 + 5 + "s";
+  document.body.appendChild(confetti);
+}
+
+/* Random pop-up messages */
+const messages = ["You’re amazing 😘","💖💖💖","Can’t wait 🥰","Sweetheart 💕","Cutie pie 🥹"];
+setInterval(() => {
+  const msg = document.createElement("div");
+  msg.className = "popup";
+  msg.innerHTML = messages[Math.floor(Math.random()*messages.length)];
+  msg.style.left = Math.random()*80 + "vw";
+  msg.style.top = Math.random()*60 + "vh";
+  document.body.appendChild(msg);
+  setTimeout(()=> msg.remove(),3000);
+},2000);
+
+/* Typing effect */
+function typeText(element, text, delay=30){
+  element.innerHTML="";
+  let i=0;
+  let interval = setInterval(()=>{
+    element.innerHTML += text[i];
+    i++;
+    if(i>=text.length) clearInterval(interval);
+  },delay);
+}
+
+/* Start typing effect */
+window.onload = ()=>{
+  typeText(document.getElementById("typed1"),"Hey, I am… oh, you know me 😉");
+  typeText(document.getElementById("typed2"),"Valentine’s Day is sneaking up real close… and honestly, it feels like it’s doing that just to give me an excuse to flirt with you a little more 😉❤️");
+  typeText(document.getElementById("typed3"),"Are you free on 14th of Feb?");
+};
+
+/* Background music toggle */
+function toggleMusic(){
+  const music = document.getElementById("bgMusic");
+  if(music.paused) music.play();
+  else music.pause();
+}
 </script>
 
 </body>
 </html>
-
