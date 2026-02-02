@@ -1,1 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Valentine 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background: url('bg.jpg') no-repeat center center/cover;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  padding: 20px;
+}
+
+.card {
+  max-width: 720px;
+  animation: fadeIn 1.8s ease;
+}
+
+.title {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.name {
+  font-family: 'Pacifico', cursive;
+  font-size: 46px;
+  color: #ffb6c1;
+  margin: 15px 0;
+}
+
+.photo img {
+  width: 260px;
+  border-radius: 20px;
+  border: 4px solid #ffb6c1;
+  box-shadow: 0 0 25px rgba(255,182,193,0.8);
+  margin: 20px 0;
+}
+
+.text {
+  font-size: 18px;
+  line-height: 1.7;
+  margin: 15px 0;
+}
+
+.buttons {
+  margin-top: 15px;
+}
+
+button {
+  background: #ff5e78;
+  border: none;
+  padding: 12px 26px;
+  margin: 8px;
+  border-radius: 30px;
+  font-size: 16px;
+  color: white;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  transform: scale(1.08);
+  background: #ff2f5e;
+}
+
+.hidden {
+  display: none;
+}
+
+.heart {
+  position: absolute;
+  color: #ff5e78;
+  animation: fall linear infinite;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fall {
+  0% { transform: translateY(-10vh); opacity: 1; }
+  100% { transform: translateY(110vh); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="overlay"></div>
+
+<div class="container">
+  <div class="card">
+
+    <!-- STEP 1 -->
+    <div id="step1">
+      <div class="title">Hey, I am… oh, you know me 😉</div>
+      <div class="name">Valentine’s Day is sneaking up real close… and honestly, it feels like it’s doing that just to give me an excuse to flirt with you a little more 😉❤️</div>
+
+
+      <div class="text">Are you free on 14th of feb? </div>
+
+      <div class="buttons">
+        <button onclick="valentineYes()">Yes</button>
+        <button onclick="valentineNo()">No</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div id="step2" class="hidden">
+      <div class="text">Please say yes 🥺❤️</div>
+      <button onclick="valentineYes()">Okay… yes</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div id="step3" class="hidden">
+      <div class="text">You are such a cutie pieee 🥹❤️</div>
+      <div class="text">Will you be my Valentine?</div>
+
+      <div class="buttons">
+        <button onclick="finalYes()">Yes 💖</button>
+        <button onclick="finalNo()">No</button>
+      </div>
+    </div>
+
+    <!-- FINAL -->
+    <div id="final" class="hidden">
+      <div class="name">Counting down to the 14th. See you soon… and yes, I’m smiling already❤️</div>
+      <div class="text">
+        Thank you for being you 💕
+      </div>
+      <div class="text">❤️❤️❤️</div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+function valentineNo() {
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step2").classList.remove("hidden");
+}
+
+function valentineYes() {
+  document.getElementById("step1").classList.add("hidden");
+  document.getElementById("step2").classList.add("hidden");
+  document.getElementById("step3").classList.remove("hidden");
+}
+
+function finalNo() {
+  alert("Pleaseeee say yes 😭");
+  finalYes();
+}
+
+function finalYes() {
+  document.getElementById("step3").classList.add("hidden");
+  document.getElementById("final").classList.remove("hidden");
+}
+
+/* Falling hearts */
+for (let i = 0; i < 28; i++) {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerHTML = "❤️";
+  heart.style.left = Math.random() * 100 + "vw";
+  heart.style.fontSize = Math.random() * 20 + 15 + "px";
+  heart.style.animationDuration = Math.random() * 3 + 4 + "s";
+  document.body.appendChild(heart);
+}
+</script>
+
+</body>
+</html>
 
